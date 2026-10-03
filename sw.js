@@ -1,10 +1,13 @@
-const CACHE = 'daniel-aime-cookbook-v6';
+const CACHE = 'daniel-aime-cookbook-v7';
 const ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './manifest.json',
+  './icons/favicon.ico',
+  './icons/favicon-32.png',
+  './icons/apple-touch-icon.png',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
