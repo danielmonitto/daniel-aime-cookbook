@@ -34,10 +34,10 @@ Python 3.10 or newer is recommended.
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-COOKBOOK_DATA_DIR="$PWD/.local-data" flask --app server run --port 8080
+COOKBOOK_DATA_DIR="$PWD/.local-data" flask --app server run --port 5005
 ```
 
-Open `http://localhost:8080`. Do not use `python -m http.server`; the frontend now requires the API.
+Open `http://localhost:5005`. Do not use `python -m http.server`; the frontend now requires the API.
 
 Run the API tests with:
 
@@ -87,7 +87,7 @@ Useful checks:
 ```bash
 systemctl status cookbook
 journalctl -u cookbook -n 100 --no-pager
-curl http://127.0.0.1:8080/api/recipes
+curl http://127.0.0.1:5005/api/recipes
 ```
 
 ## Move recipes from the old version

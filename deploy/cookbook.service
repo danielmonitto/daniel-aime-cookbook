@@ -8,7 +8,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/opt/cookbook
 Environment=COOKBOOK_DATA_DIR=/opt/cookbook-data
-ExecStart=/opt/cookbook/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8080 --access-logfile - server:app
+ExecStart=/opt/cookbook/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:5005 --access-logfile - server:app
 Restart=on-failure
 RestartSec=3
 
