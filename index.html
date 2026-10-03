@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f6efe4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Our Cookbook" />
+  <meta name="description" content="Daniel & Aime's private virtual cookbook." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Daniel & Aime's Cookbook</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <button class="icon-button ghost" id="homeButton" aria-label="Back to cookbook cover">
+          <span aria-hidden="true">⌂</span>
+        </button>
+        <div>
+          <p class="eyebrow">our little recipe book</p>
+          <h1>Daniel & Aime's Cookbook</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="add-recipe-button" id="addRecipeButton" aria-label="Add recipe">
+          <span class="add-recipe-plus" aria-hidden="true">＋</span>
+          <span class="add-recipe-label">Add recipe</span>
+        </button>
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open cookbook menu">•••</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="toolbar" aria-label="Recipe tools">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search recipes or ingredients" autocomplete="off" />
+          <button id="clearSearch" class="clear-search" type="button" aria-label="Clear search">×</button>
+        </label>
+        <div class="filter-row" id="tagFilters" aria-label="Recipe filters"></div>
+      </section>
+
+      <section class="book-stage" aria-live="polite">
+        <div class="book" id="book">
+          <div class="book-edge"></div>
+          <article class="paper-page" id="page">
+            <div id="pageContent"></div>
+          </article>
+        </div>
+
+        <div class="page-controls" id="pageControls">
+          <button class="page-nav" id="prevPage" aria-label="Previous recipe">‹</button>
+          <div class="page-indicator" id="pageIndicator">Cover</div>
+          <button class="page-nav" id="nextPage" aria-label="Next recipe">›</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="side-sheet" id="sideSheet" aria-hidden="true" aria-label="Cookbook menu">
+    <div class="sheet-handle"></div>
+    <div class="side-sheet-head">
+      <div>
+        <p class="eyebrow">cookbook</p>
+        <h2>Options</h2>
+      </div>
+      <button class="icon-button ghost" id="closeMenuButton" aria-label="Close menu">×</button>
+    </div>
+    <button class="menu-action" id="installButton" hidden>
+      <span>↧</span>
+      <span><strong>Install app</strong><small>Add this cookbook to your home screen</small></span>
+    </button>
+    <button class="menu-action" id="exportButton">
+      <span>⇩</span>
+      <span><strong>Export cookbook</strong><small>Download a backup of all recipes</small></span>
+    </button>
+    <label class="menu-action file-action" for="importFile">
+      <span>⇧</span>
+      <span><strong>Import cookbook</strong><small>Restore recipes from a backup file</small></span>
+    </label>
+    <input id="importFile" type="file" accept="application/json" hidden />
+    <button class="menu-action" id="showAllButton">
+      <span>☰</span>
+      <span><strong>Recipe index</strong><small>See everything in one list</small></span>
+    </button>
+    <div class="storage-note">
+      Recipes are stored on this device. Use export occasionally if you want a backup before you add a database later.
+    </div>
+  </aside>
+
+  <section class="modal-shell" id="recipeModal" aria-hidden="true" aria-label="Recipe details">
+    <div class="modal-card detail-modal">
+      <div id="recipeDetail"></div>
+    </div>
+  </section>
+
+  <section class="modal-shell" id="formModal" aria-hidden="true" aria-label="Add recipe">
+    <div class="modal-card form-modal">
+      <div class="modal-head sticky-head">
+        <div>
+          <p class="eyebrow" id="formEyebrow">new page</p>
+          <h2 id="formTitle">Add a recipe</h2>
+        </div>
+        <button class="icon-button ghost" id="closeFormButton" aria-label="Close recipe form">×</button>
+      </div>
+
+      <form id="recipeForm">
+        <input type="hidden" id="recipeId" />
+
+        <label class="field full">
+          <span>Recipe name</span>
+          <input id="titleInput" required maxlength="80" placeholder="e.g. creamy tomato pasta" />
+        </label>
+
+        <label class="image-picker full" id="imagePicker">
+          <input id="imageInput" type="file" accept="image/*" hidden />
+          <img id="imagePreview" alt="Recipe preview" hidden />
+          <div id="imagePlaceholder">
+            <span class="camera-mark">＋</span>
+            <strong>Add a photo</strong>
+            <small>tap to choose from your phone</small>
+          </div>
+        </label>
+        <button type="button" class="remove-photo-button" id="removeImageButton" hidden>Remove photo</button>
+
+        <div class="two-col">
+          <label class="field">
+            <span>Prep time</span>
+            <input id="prepInput" placeholder="10 min" maxlength="20" />
+          </label>
+          <label class="field">
+            <span>Cook time</span>
+            <input id="cookInput" placeholder="25 min" maxlength="20" />
+          </label>
+        </div>
+
+        <label class="field full">
+          <span>Tag</span>
+          <input id="tagInput" placeholder="Dinner" maxlength="24" />
+        </label>
+
+        <div class="rating-grid full">
+          <label class="rating-field">
+            <span><strong>Effort</strong><small>1 = easy, 10 = mission</small></span>
+            <div class="range-line">
+              <input id="effortInput" type="range" min="1" max="10" value="4" />
+              <output id="effortOutput">4/10</output>
+            </div>
+          </label>
+          <label class="rating-field">
+            <span><strong>Deliciousness</strong><small>1 = never again, 10 = elite</small></span>
+            <div class="range-line">
+              <input id="deliciousInput" type="range" min="1" max="10" value="8" />
+              <output id="deliciousOutput">8/10</output>
+            </div>
+          </label>
+        </div>
+
+        <label class="field full">
+          <span>Short note</span>
+          <textarea id="noteInput" rows="2" placeholder="why we like it, where it came from, or anything worth remembering"></textarea>
+        </label>
+
+        <label class="field full">
+          <span>Ingredients</span>
+          <textarea id="ingredientsInput" required rows="7" placeholder="one ingredient per line\n250g pasta\n1 onion\n2 garlic cloves"></textarea>
+          <small>one ingredient per line</small>
+        </label>
+
+        <label class="field full">
+          <span>Method</span>
+          <textarea id="stepsInput" required rows="9" placeholder="one step per line\nboil the pasta\ncook onion and garlic\nadd sauce and combine"></textarea>
+          <small>one step per line</small>
+        </label>
+
+        <div class="form-actions full">
+          <button type="button" class="button secondary" id="cancelFormButton">Cancel</button>
+          <button type="submit" class="button primary" id="saveRecipeButton">Save recipe</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="modal-shell" id="indexModal" aria-hidden="true" aria-label="Recipe index">
+    <div class="modal-card index-modal">
+      <div class="modal-head sticky-head">
+        <div>
+          <p class="eyebrow">all recipes</p>
+          <h2>Recipe index</h2>
+        </div>
+        <button class="icon-button ghost" id="closeIndexButton" aria-label="Close recipe index">×</button>
+      </div>
+      <div id="recipeIndex" class="recipe-index"></div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
