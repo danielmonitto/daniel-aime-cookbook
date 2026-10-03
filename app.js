@@ -1,32 +1,94 @@
 const STORAGE_KEY = 'daniel-aime-cookbook-v1';
+const RECIPE_DATA_VERSION_KEY = 'daniel-aime-cookbook-recipe-data-version';
+const RECIPE_DATA_VERSION = '2';
+const LEGACY_STARTER_TITLES = new Set([
+  'Creamy Tomato Pasta',
+  'Sticky Honey Chicken Bowls'
+]);
 
 const starterRecipes = [
   {
-    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-    title: 'Creamy Tomato Pasta',
+    id: 'french-onion-chicken-risoni-bake',
+    title: 'French Onion Chicken Risoni Bake',
     image: '',
     prep: '10 min',
-    cook: '20 min',
+    cook: '50–65 min',
     tag: 'Dinner',
     effort: 3,
-    delicious: 9,
-    note: 'Easy comfort food for nights when we want something really good without much effort.',
-    ingredients: ['250g pasta', '1 small onion', '2 garlic cloves', '1 tbsp tomato paste', '400g crushed tomatoes', '100ml cream', 'Parmesan', 'Salt, pepper and chilli flakes'],
-    steps: ['Boil the pasta until just al dente and save a little pasta water.', 'Cook the onion in olive oil until soft, then add garlic and tomato paste.', 'Add crushed tomatoes and simmer for 10 minutes.', 'Stir in cream, then add pasta and enough pasta water to make it glossy.', 'Finish with parmesan, pepper and chilli flakes.'],
+    delicious: 8,
+    note: 'Creamy, cheesy and easy to make in one baking dish.',
+    ingredients: ['500g chicken mince', '1½ cups uncooked risoni', '1½ cups beef stock', '300ml thickened cream', '1 packet French onion soup mix', '½ onion, thinly sliced (optional)', '2 cups chopped spinach', '1–2 cups grated tasty cheese'],
+    steps: ['Heat the oven to 180°C fan-forced and dissolve the soup mix in the beef stock.', 'Mix the risoni, stock, cream and onion in a 24 × 33cm baking dish.', 'Add the chicken mince, break it up and mix well.', 'Cover tightly with foil and bake for 40–55 minutes, until the risoni is tender.', 'Stir through the spinach, top with cheese and bake uncovered for 10 minutes, until golden. Add ¼–½ cup extra stock and cook covered a little longer if the risoni is still firm or dry.'],
     createdAt: new Date().toISOString()
   },
   {
-    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + 1),
-    title: 'Sticky Honey Chicken Bowls',
+    id: 'prawn-sausage-creamy-pasta',
+    title: 'Prawn & Sausage Creamy Pasta',
     image: '',
     prep: '15 min',
-    cook: '20 min',
-    tag: 'Favourite',
+    cook: '25 min',
+    tag: 'Pasta',
     effort: 5,
-    delicious: 10,
-    note: 'Sweet, salty, crispy and very hard to stop eating.',
-    ingredients: ['400g chicken thigh', '2 tbsp cornflour', '2 tbsp honey', '2 tbsp soy sauce', '1 tbsp rice vinegar', '1 tsp sesame oil', 'Rice', 'Cucumber and spring onion'],
-    steps: ['Coat the chicken lightly in cornflour and season.', 'Pan-fry until golden and cooked through.', 'Mix honey, soy, vinegar and sesame oil, then pour into the pan.', 'Bubble until the sauce gets thick and glossy.', 'Serve over rice with cucumber and spring onion.'],
+    delicious: 7,
+    note: 'Creamy Cajun pasta with crispy andouille sausage and prawns.',
+    ingredients: ['Rigatoni', 'Andouille sausage, sliced', 'Prawns, peeled', 'Olive oil', 'Cajun seasoning', 'Roasted garlic butter', 'Red capsicum, diced', 'Green capsicum, diced', '1 shallot, diced', 'Garlic, minced', 'Thickened cream', '1 lemon', 'Parmesan, grated', 'Fresh parsley'],
+    steps: ['Cook the rigatoni until just shy of al dente. Reserve some pasta water, then drain.', 'Brown the sausage in a large pan, remove it, then season and quickly sear the prawns. Set aside.', 'Melt the garlic butter in the same pan. Soften the capsicum and shallot, then add the garlic.', 'Add the cream, Cajun seasoning and a squeeze of lemon. Simmer until slightly thickened.', 'Return the pasta, sausage and prawns to the pan. Stir in Parmesan over low heat, loosening with pasta water as needed, then finish with parsley and lemon.'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'broken-rice',
+    title: 'Broken Rice',
+    image: '',
+    prep: '15 min',
+    cook: '25 min',
+    tag: 'Dinner',
+    effort: 4,
+    delicious: 7.5,
+    note: 'Crispy chicken schnitzel with rice, vegetables and eggs.',
+    ingredients: ['4–6 chicken schnitzels', '1 cabbage, thinly sliced', '2 carrots, thinly sliced or grated', '2 cups rice', '2 eggs', 'Cooking oil', 'Soy sauce', 'Salt and pepper'],
+    steps: ['Cook the rice according to the packet instructions.', 'Fry the chicken schnitzels until golden and cooked through, then slice.', 'Stir-fry the cabbage and carrot in seasoned oil with a splash of soy sauce until just tender.', 'Fry the eggs to your liking.', 'Serve the rice topped with vegetables, sliced schnitzel and egg.'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'vodka-pasta',
+    title: 'Vodka Pasta',
+    image: '',
+    prep: '10 min',
+    cook: '20 min',
+    tag: 'Pasta',
+    effort: 4,
+    delicious: 6.5,
+    note: 'Rich tomato and cream rigatoni with a glossy Parmesan sauce.',
+    ingredients: ['250g rigatoni', '2 shallots, finely diced', '2 garlic cloves, finely diced', '1 tsp chilli flakes', '1 tsp oregano', '130g tomato paste', '1 shot vodka', '1 cup thickened cream', '1 cup grated Parmesan', 'Cold butter, cubed', 'Parsley, to garnish', '1 tbsp olive oil', 'Salt'],
+    steps: ['Cook the rigatoni in well-salted water until one minute shy of al dente.', 'Meanwhile, soften the shallots and garlic in olive oil. Add the chilli, oregano and tomato paste, then cook for 1–2 minutes.', 'Deglaze with vodka and let the alcohol cook off. Stir in the cream and simmer for 5 minutes.', 'Mix in the Parmesan, then add the pasta and let it finish cooking in the sauce.', 'Stir through a little cold butter until glossy, then serve with parsley and extra Parmesan.'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'chicken-pesto-subs',
+    title: 'Chicken Pesto Subs',
+    image: '',
+    prep: '25 min',
+    cook: '25 min',
+    tag: 'Lunch',
+    effort: 6,
+    delicious: null,
+    note: 'Toasted chicken and cheese subs with a fresh lower-calorie pesto.',
+    ingredients: ['1.5kg trimmed chicken thighs', '1½ tbsp kosher salt', '1 tbsp black pepper', '3 tbsp garlic powder', '2 tbsp paprika', 'Avocado oil cooking spray', '1 cup packed parsley', '3 cups packed basil', '95g Parmesan', '¼ cup olive oil', '3–4 garlic cloves', 'Juice of 1 lemon', '1 tsp kosher salt', '½ tsp black pepper', '¼ cup pine nuts or walnuts', '2–4 tbsp water', 'Baguettes or sub rolls', '16 thin slices provolone or Swiss cheese'],
+    steps: ['Season the chicken with salt, pepper, garlic powder and paprika, then cook until browned and cooked through. Slice or chop it.', 'Blend the pesto ingredients, adding enough water to make it spreadable.', 'Split and lightly hollow out the baguettes or rolls, then spread pesto inside.', 'Fill with chicken and cheese.', 'Grill or toast until the bread is crisp and the cheese is melted. Serve hot.'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'crispy-cheesy-beef-tacos',
+    title: 'Crispy Cheesy Beef Tacos',
+    image: '',
+    prep: '20 min',
+    cook: '30 min',
+    tag: 'Mexican',
+    effort: 6,
+    delicious: null,
+    note: 'Makes about 10–15 crispy, cheesy tacos with garlic-lime yogurt sauce.',
+    ingredients: ['1.2kg lean beef mince', '2 tsp salt', '3 tsp smoked paprika', '3 tsp oregano', '3 tsp garlic powder', '2 tsp onion powder', '2 tsp cumin', '200g tomato paste', '2 tbsp chopped flat-leaf parsley', 'Avocado oil cooking spray', '15 low-carb mini wraps', '320g grated mozzarella', '200g white onion, chopped', '200g red and green capsicum, chopped', '1 tsp salt and 1 tsp paprika, for the vegetables', '150g Greek yogurt', 'Juice of 1 lime', '1 small garlic clove, minced', '1 tbsp finely chopped flat-leaf parsley', '1–2 tsp hot sauce', 'Pinch of salt'],
+    steps: ['Heat the oven to 180°C. Spray the onion and capsicum with oil, season with salt and paprika, and roast on a lined tray for 15 minutes.', 'Add the beef, remaining spices, tomato paste and parsley. Mix, flatten and lightly spray with oil.', 'Bake for 6 minutes, break up the beef, then bake for another 6 minutes. Stir in a splash of water to keep it juicy.', 'Lightly dip the wraps in the pan juices, fill with beef and mozzarella, then bake for 12 minutes, flipping halfway.', 'Mix the yogurt sauce ingredients and drizzle over the hot tacos to serve.'],
     createdAt: new Date().toISOString()
   }
 ];
@@ -74,11 +136,18 @@ function loadRecipes() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(starterRecipes));
+      localStorage.setItem(RECIPE_DATA_VERSION_KEY, RECIPE_DATA_VERSION);
       return [...starterRecipes];
     }
     const parsed = JSON.parse(stored);
     if (!Array.isArray(parsed)) return [...starterRecipes];
-    const cleaned = parsed.map(removeLegacyServings);
+    let cleaned = parsed.map(removeLegacyServings);
+    if (localStorage.getItem(RECIPE_DATA_VERSION_KEY) !== RECIPE_DATA_VERSION) {
+      cleaned = cleaned.filter(recipe => !LEGACY_STARTER_TITLES.has(recipe.title));
+      const existingTitles = new Set(cleaned.map(recipe => recipe.title));
+      cleaned.push(...starterRecipes.filter(recipe => !existingTitles.has(recipe.title)));
+      localStorage.setItem(RECIPE_DATA_VERSION_KEY, RECIPE_DATA_VERSION);
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
     return cleaned;
   } catch {
@@ -98,6 +167,10 @@ function escapeHTML(value = '') {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+}
+
+function formatScore(value) {
+  return Number.isFinite(Number(value)) && value !== null && value !== '' ? `${Number(value)}/10` : 'Not rated';
 }
 
 function recipeImage(recipe, className = '') {
@@ -178,8 +251,8 @@ function renderRecipePage(recipe) {
           <div class="meta-card"><strong>${escapeHTML(recipe.cook || '—')}</strong><small>cook</small></div>
         </div>
         <div class="score-row">
-          <div class="score-card"><span class="score-label">Effort</span><span class="score">${Number(recipe.effort || 1)}/10</span></div>
-          <div class="score-card"><span class="score-label">Delicious</span><span class="score">${Number(recipe.delicious || 1)}/10</span></div>
+          <div class="score-card"><span class="score-label">Effort</span><span class="score">${formatScore(recipe.effort)}</span></div>
+          <div class="score-card"><span class="score-label">Delicious</span><span class="score">${formatScore(recipe.delicious)}</span></div>
         </div>
         <div class="recipe-page-actions">
           <button class="open-recipe" data-open-recipe="${recipe.id}">Open recipe</button>
@@ -396,8 +469,8 @@ function openRecipe(id) {
         <div class="meta-card"><strong>${escapeHTML(recipe.cook || '—')}</strong><small>cook</small></div>
       </div>
       <div class="detail-scores">
-        <div class="score-card"><span class="score-label">Effort</span><span class="score">${Number(recipe.effort || 1)}/10</span></div>
-        <div class="score-card"><span class="score-label">Delicious</span><span class="score">${Number(recipe.delicious || 1)}/10</span></div>
+        <div class="score-card"><span class="score-label">Effort</span><span class="score">${formatScore(recipe.effort)}</span></div>
+        <div class="score-card"><span class="score-label">Delicious</span><span class="score">${formatScore(recipe.delicious)}</span></div>
       </div>
       <div class="ingredients-heading">
         <h3 class="section-title">Ingredients</h3>
@@ -424,8 +497,8 @@ function renderIndex() {
   $('#recipeIndex').innerHTML = list.length ? list.map(recipe => `
     <button class="index-item" data-index-open="${recipe.id}">
       ${recipe.image ? `<img class="index-thumb" src="${recipe.image}" alt="" />` : '<span class="index-thumb placeholder">✦</span>'}
-      <span class="index-copy"><strong>${escapeHTML(recipe.title)}</strong><small>${escapeHTML(recipe.tag || 'Recipe')} · effort ${recipe.effort}/10</small></span>
-      <span class="index-score">${recipe.delicious}/10</span>
+      <span class="index-copy"><strong>${escapeHTML(recipe.title)}</strong><small>${escapeHTML(recipe.tag || 'Recipe')} · effort ${formatScore(recipe.effort)}</small></span>
+      <span class="index-score">${formatScore(recipe.delicious)}</span>
     </button>
   `).join('') : `<div class="empty-page"><div><h2>No recipes</h2><p>Add something good to eat.</p></div></div>`;
 }
