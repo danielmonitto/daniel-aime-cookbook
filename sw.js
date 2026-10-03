@@ -1,4 +1,4 @@
-const CACHE = 'daniel-aime-cookbook-v9';
+const CACHE = 'daniel-aime-cookbook-v11';
 const ASSETS = [
   './',
   './index.html',
