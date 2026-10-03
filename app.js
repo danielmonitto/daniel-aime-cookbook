@@ -1,99 +1,7 @@
 const STORAGE_KEY = 'daniel-aime-cookbook-v1';
-const RECIPE_DATA_VERSION_KEY = 'daniel-aime-cookbook-recipe-data-version';
-const RECIPE_DATA_VERSION = '2';
-const LEGACY_STARTER_TITLES = new Set([
-  'Creamy Tomato Pasta',
-  'Sticky Honey Chicken Bowls'
-]);
+const MIGRATION_COMPLETE_KEY = 'daniel-aime-cookbook-server-migration-complete';
 
-const starterRecipes = [
-  {
-    id: 'french-onion-chicken-risoni-bake',
-    title: 'French Onion Chicken Risoni Bake',
-    image: '',
-    prep: '10 min',
-    cook: '50–65 min',
-    tag: 'Dinner',
-    effort: 3,
-    delicious: 8,
-    note: 'Creamy, cheesy and easy to make in one baking dish.',
-    ingredients: ['500g chicken mince', '1½ cups uncooked risoni', '1½ cups beef stock', '300ml thickened cream', '1 packet French onion soup mix', '½ onion, thinly sliced (optional)', '2 cups chopped spinach', '1–2 cups grated tasty cheese'],
-    steps: ['Heat the oven to 180°C fan-forced and dissolve the soup mix in the beef stock.', 'Mix the risoni, stock, cream and onion in a 24 × 33cm baking dish.', 'Add the chicken mince, break it up and mix well.', 'Cover tightly with foil and bake for 40–55 minutes, until the risoni is tender.', 'Stir through the spinach, top with cheese and bake uncovered for 10 minutes, until golden. Add ¼–½ cup extra stock and cook covered a little longer if the risoni is still firm or dry.'],
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'prawn-sausage-creamy-pasta',
-    title: 'Prawn & Sausage Creamy Pasta',
-    image: '',
-    prep: '15 min',
-    cook: '25 min',
-    tag: 'Pasta',
-    effort: 5,
-    delicious: 7,
-    note: 'Creamy Cajun pasta with crispy andouille sausage and prawns.',
-    ingredients: ['Rigatoni', 'Andouille sausage, sliced', 'Prawns, peeled', 'Olive oil', 'Cajun seasoning', 'Roasted garlic butter', 'Red capsicum, diced', 'Green capsicum, diced', '1 shallot, diced', 'Garlic, minced', 'Thickened cream', '1 lemon', 'Parmesan, grated', 'Fresh parsley'],
-    steps: ['Cook the rigatoni until just shy of al dente. Reserve some pasta water, then drain.', 'Brown the sausage in a large pan, remove it, then season and quickly sear the prawns. Set aside.', 'Melt the garlic butter in the same pan. Soften the capsicum and shallot, then add the garlic.', 'Add the cream, Cajun seasoning and a squeeze of lemon. Simmer until slightly thickened.', 'Return the pasta, sausage and prawns to the pan. Stir in Parmesan over low heat, loosening with pasta water as needed, then finish with parsley and lemon.'],
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'broken-rice',
-    title: 'Broken Rice',
-    image: '',
-    prep: '15 min',
-    cook: '25 min',
-    tag: 'Dinner',
-    effort: 4,
-    delicious: 7.5,
-    note: 'Crispy chicken schnitzel with rice, vegetables and eggs.',
-    ingredients: ['4–6 chicken schnitzels', '1 cabbage, thinly sliced', '2 carrots, thinly sliced or grated', '2 cups rice', '2 eggs', 'Cooking oil', 'Soy sauce', 'Salt and pepper'],
-    steps: ['Cook the rice according to the packet instructions.', 'Fry the chicken schnitzels until golden and cooked through, then slice.', 'Stir-fry the cabbage and carrot in seasoned oil with a splash of soy sauce until just tender.', 'Fry the eggs to your liking.', 'Serve the rice topped with vegetables, sliced schnitzel and egg.'],
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'vodka-pasta',
-    title: 'Vodka Pasta',
-    image: '',
-    prep: '10 min',
-    cook: '20 min',
-    tag: 'Pasta',
-    effort: 4,
-    delicious: 6.5,
-    note: 'Rich tomato and cream rigatoni with a glossy Parmesan sauce.',
-    ingredients: ['250g rigatoni', '2 shallots, finely diced', '2 garlic cloves, finely diced', '1 tsp chilli flakes', '1 tsp oregano', '130g tomato paste', '1 shot vodka', '1 cup thickened cream', '1 cup grated Parmesan', 'Cold butter, cubed', 'Parsley, to garnish', '1 tbsp olive oil', 'Salt'],
-    steps: ['Cook the rigatoni in well-salted water until one minute shy of al dente.', 'Meanwhile, soften the shallots and garlic in olive oil. Add the chilli, oregano and tomato paste, then cook for 1–2 minutes.', 'Deglaze with vodka and let the alcohol cook off. Stir in the cream and simmer for 5 minutes.', 'Mix in the Parmesan, then add the pasta and let it finish cooking in the sauce.', 'Stir through a little cold butter until glossy, then serve with parsley and extra Parmesan.'],
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'chicken-pesto-subs',
-    title: 'Chicken Pesto Subs',
-    image: '',
-    prep: '25 min',
-    cook: '25 min',
-    tag: 'Lunch',
-    effort: 6,
-    delicious: null,
-    note: 'Toasted chicken and cheese subs with a fresh lower-calorie pesto.',
-    ingredients: ['1.5kg trimmed chicken thighs', '1½ tbsp kosher salt', '1 tbsp black pepper', '3 tbsp garlic powder', '2 tbsp paprika', 'Avocado oil cooking spray', '1 cup packed parsley', '3 cups packed basil', '95g Parmesan', '¼ cup olive oil', '3–4 garlic cloves', 'Juice of 1 lemon', '1 tsp kosher salt', '½ tsp black pepper', '¼ cup pine nuts or walnuts', '2–4 tbsp water', 'Baguettes or sub rolls', '16 thin slices provolone or Swiss cheese'],
-    steps: ['Season the chicken with salt, pepper, garlic powder and paprika, then cook until browned and cooked through. Slice or chop it.', 'Blend the pesto ingredients, adding enough water to make it spreadable.', 'Split and lightly hollow out the baguettes or rolls, then spread pesto inside.', 'Fill with chicken and cheese.', 'Grill or toast until the bread is crisp and the cheese is melted. Serve hot.'],
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: 'crispy-cheesy-beef-tacos',
-    title: 'Crispy Cheesy Beef Tacos',
-    image: '',
-    prep: '20 min',
-    cook: '30 min',
-    tag: 'Mexican',
-    effort: 6,
-    delicious: null,
-    note: 'Makes about 10–15 crispy, cheesy tacos with garlic-lime yogurt sauce.',
-    ingredients: ['1.2kg lean beef mince', '2 tsp salt', '3 tsp smoked paprika', '3 tsp oregano', '3 tsp garlic powder', '2 tsp onion powder', '2 tsp cumin', '200g tomato paste', '2 tbsp chopped flat-leaf parsley', 'Avocado oil cooking spray', '15 low-carb mini wraps', '320g grated mozzarella', '200g white onion, chopped', '200g red and green capsicum, chopped', '1 tsp salt and 1 tsp paprika, for the vegetables', '150g Greek yogurt', 'Juice of 1 lime', '1 small garlic clove, minced', '1 tbsp finely chopped flat-leaf parsley', '1–2 tsp hot sauce', 'Pinch of salt'],
-    steps: ['Heat the oven to 180°C. Spray the onion and capsicum with oil, season with salt and paprika, and roast on a lined tray for 15 minutes.', 'Add the beef, remaining spices, tomato paste and parsley. Mix, flatten and lightly spray with oil.', 'Bake for 6 minutes, break up the beef, then bake for another 6 minutes. Stir in a splash of water to keep it juicy.', 'Lightly dip the wraps in the pan juices, fill with beef and mozzarella, then bake for 12 minutes, flipping halfway.', 'Mix the yogurt sauce ingredients and drizzle over the hot tacos to serve.'],
-    createdAt: new Date().toISOString()
-  }
-];
-
-let recipes = loadRecipes();
+let recipes = [];
 let currentIndex = -1; // -1 = cover
 let activeTag = 'All';
 let searchTerm = '';
@@ -131,32 +39,22 @@ function removeLegacyServings(recipe) {
   return cleaned;
 }
 
-function loadRecipes() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(starterRecipes));
-      localStorage.setItem(RECIPE_DATA_VERSION_KEY, RECIPE_DATA_VERSION);
-      return [...starterRecipes];
-    }
-    const parsed = JSON.parse(stored);
-    if (!Array.isArray(parsed)) return [...starterRecipes];
-    let cleaned = parsed.map(removeLegacyServings);
-    if (localStorage.getItem(RECIPE_DATA_VERSION_KEY) !== RECIPE_DATA_VERSION) {
-      cleaned = cleaned.filter(recipe => !LEGACY_STARTER_TITLES.has(recipe.title));
-      const existingTitles = new Set(cleaned.map(recipe => recipe.title));
-      cleaned.push(...starterRecipes.filter(recipe => !existingTitles.has(recipe.title)));
-      localStorage.setItem(RECIPE_DATA_VERSION_KEY, RECIPE_DATA_VERSION);
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
-    return cleaned;
-  } catch {
-    return [...starterRecipes];
+async function apiRequest(path, options = {}) {
+  const response = await fetch(path, {
+    ...options,
+    headers: options.body instanceof FormData
+      ? options.headers
+      : { 'Content-Type': 'application/json', ...options.headers }
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || error.description || `Request failed (${response.status})`);
   }
+  return response.status === 204 ? null : response.json();
 }
 
-function saveRecipes() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+async function loadRecipes() {
+  recipes = await apiRequest('/api/recipes');
   applyFilters(false);
 }
 
@@ -612,6 +510,15 @@ async function resizeImage(file) {
   });
 }
 
+async function uploadImage(dataUrl) {
+  if (!dataUrl?.startsWith('data:')) return dataUrl || '';
+  const blob = await fetch(dataUrl).then(response => response.blob());
+  const form = new FormData();
+  form.append('image', blob, 'recipe.jpg');
+  const uploaded = await apiRequest('/api/uploads', { method: 'POST', body: form });
+  return uploaded.url;
+}
+
 function lines(value) {
   return value.split('\n').map(v => v.trim()).filter(Boolean);
 }
@@ -626,6 +533,9 @@ function showToast(message) {
 
 async function handleFormSubmit(event) {
   event.preventDefault();
+  const saveButton = $('#saveRecipeButton');
+  saveButton.disabled = true;
+  saveButton.textContent = 'Saving…';
   const id = $('#recipeId').value;
   const recipe = {
     id: id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
@@ -644,14 +554,22 @@ async function handleFormSubmit(event) {
   };
 
   try {
+    recipe.image = await uploadImage(recipe.image);
     if (id) {
-      recipes = recipes.map(r => r.id === id ? recipe : r);
+      const saved = await apiRequest(`/api/recipes/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        body: JSON.stringify(recipe)
+      });
+      recipes = recipes.map(r => r.id === id ? saved : r);
       showToast('Recipe updated');
     } else {
-      recipes.unshift(recipe);
+      const saved = await apiRequest('/api/recipes', {
+        method: 'POST',
+        body: JSON.stringify(recipe)
+      });
+      recipes.unshift(saved);
       showToast('Recipe added to the book');
     }
-    saveRecipes();
     activeTag = 'All';
     searchTerm = '';
     searchInput.value = '';
@@ -661,21 +579,28 @@ async function handleFormSubmit(event) {
     renderPage('next');
   } catch (error) {
     console.error(error);
-    showToast('Could not save. Try a smaller photo.');
+    showToast(error.message || 'Could not save recipe');
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = id ? 'Save changes' : 'Save recipe';
   }
 }
 
-function deleteRecipe(id) {
+async function deleteRecipe(id) {
   const recipe = recipes.find(r => r.id === id);
   if (!recipe) return;
   const confirmed = window.confirm(`Delete “${recipe.title}”?`);
   if (!confirmed) return;
-  recipes = recipes.filter(r => r.id !== id);
-  saveRecipes();
-  closeModal(recipeModal);
-  currentIndex = recipes.length ? Math.min(currentIndex, recipes.length - 1) : -1;
-  applyFilters(false);
-  showToast('Recipe deleted');
+  try {
+    await apiRequest(`/api/recipes/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    recipes = recipes.filter(r => r.id !== id);
+    closeModal(recipeModal);
+    currentIndex = recipes.length ? Math.min(currentIndex, recipes.length - 1) : -1;
+    applyFilters(false);
+    showToast('Recipe deleted');
+  } catch (error) {
+    showToast(error.message || 'Could not delete recipe');
+  }
 }
 
 function exportCookbook() {
@@ -701,19 +626,69 @@ async function importCookbook(file) {
     const parsed = JSON.parse(text);
     const incoming = Array.isArray(parsed) ? parsed : parsed.recipes;
     if (!Array.isArray(incoming)) throw new Error('Invalid backup');
-    const confirmed = window.confirm(`Import ${incoming.length} recipes? This will replace the recipes currently on this device.`);
+    const confirmed = window.confirm(`Import ${incoming.length} recipes? This will replace the shared cookbook for everyone.`);
     if (!confirmed) return;
-    recipes = incoming.map(removeLegacyServings);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+    const cleaned = [];
+    for (const incomingRecipe of incoming.map(removeLegacyServings)) {
+      cleaned.push({ ...incomingRecipe, image: await uploadImage(incomingRecipe.image) });
+    }
+    recipes = await apiRequest('/api/recipes', {
+      method: 'PUT',
+      body: JSON.stringify(cleaned)
+    });
     activeTag = 'All';
     searchTerm = '';
     searchInput.value = '';
     currentIndex = -1;
     applyFilters(false);
     closeMenu();
-    showToast('Cookbook restored');
+    showToast('Shared cookbook restored');
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || 'That backup file could not be read');
+  }
+}
+
+function legacyRecipes() {
+  if (localStorage.getItem(MIGRATION_COMPLETE_KEY)) return [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(parsed) ? parsed.map(removeLegacyServings) : [];
   } catch {
-    showToast('That backup file could not be read');
+    return [];
+  }
+}
+
+async function migrateDeviceRecipes() {
+  const legacy = legacyRecipes();
+  if (!legacy.length) return;
+  const confirmed = window.confirm(
+    `Move ${legacy.length} recipes saved on this device into the shared cookbook? Recipes with the same id will be updated.`
+  );
+  if (!confirmed) return;
+
+  const button = $('#migrateButton');
+  button.disabled = true;
+  try {
+    const migratedRecipes = [];
+    for (const oldRecipe of legacy) {
+      migratedRecipes.push({ ...oldRecipe, image: await uploadImage(oldRecipe.image) });
+    }
+    const migratedIds = new Set(migratedRecipes.map(recipe => recipe.id));
+    const merged = [...migratedRecipes, ...recipes.filter(recipe => !migratedIds.has(recipe.id))];
+    recipes = await apiRequest('/api/recipes', {
+      method: 'PUT',
+      body: JSON.stringify(merged)
+    });
+    localStorage.setItem(MIGRATION_COMPLETE_KEY, new Date().toISOString());
+    button.hidden = true;
+    applyFilters(false);
+    closeMenu();
+    showToast('Device recipes moved to the shared cookbook');
+  } catch (error) {
+    console.error(error);
+    button.disabled = false;
+    showToast(error.message || 'Could not move device recipes');
   }
 }
 
@@ -736,6 +711,7 @@ recipeForm.addEventListener('submit', handleFormSubmit);
 $('#effortInput').addEventListener('input', updateRangeLabels);
 $('#deliciousInput').addEventListener('input', updateRangeLabels);
 $('#importFile').addEventListener('change', (e) => { if (e.target.files?.[0]) importCookbook(e.target.files[0]); e.target.value = ''; });
+$('#migrateButton').addEventListener('click', migrateDeviceRecipes);
 
 imageInput.addEventListener('change', async (event) => {
   const file = event.target.files?.[0];
@@ -858,6 +834,35 @@ if ('serviceWorker' in navigator) {
 }
 
 clearSearch.style.visibility = 'hidden';
-renderTagFilters();
-renderIndex();
-renderPage();
+
+async function initialiseApp() {
+  renderTagFilters();
+  renderIndex();
+  renderPage();
+  const oldRecipes = legacyRecipes();
+  $('#migrateButton').hidden = oldRecipes.length === 0;
+  try {
+    await loadRecipes();
+  } catch (error) {
+    console.error(error);
+    pageContent.innerHTML = `
+      <div class="empty-page">
+        <div>
+          <h2>Could not reach the cookbook</h2>
+          <p>Check the server, then reload this page.</p>
+          <button class="button primary" data-retry-load>Try again</button>
+        </div>
+      </div>
+    `;
+    pageIndicator.textContent = 'Offline';
+    prevPage.disabled = true;
+    nextPage.disabled = true;
+  }
+}
+
+pageContent.addEventListener('click', async (event) => {
+  if (!event.target.closest('[data-retry-load]')) return;
+  await initialiseApp();
+});
+
+initialiseApp();

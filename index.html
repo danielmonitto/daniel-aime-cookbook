@@ -87,12 +87,16 @@
       <span><strong>Import cookbook</strong><small>Restore recipes from a backup file</small></span>
     </label>
     <input id="importFile" type="file" accept="application/json" hidden />
+    <button class="menu-action" id="migrateButton" hidden>
+      <span>⇧</span>
+      <span><strong>Move recipes from this device</strong><small>Add the old browser-saved recipes to the shared cookbook</small></span>
+    </button>
     <button class="menu-action" id="showAllButton">
       <span>☰</span>
       <span><strong>Recipe index</strong><small>See everything in one list</small></span>
     </button>
     <div class="storage-note">
-      Recipes are stored on this device. Use export occasionally if you want a backup before you add a database later.
+      Recipes and photos are stored in the shared cookbook. Changes made here are visible on every device.
     </div>
   </aside>
 
